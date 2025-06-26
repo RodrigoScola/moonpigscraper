@@ -2,7 +2,7 @@ import { json2csv as converter } from 'json-2-csv';
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import console from 'console';
-import path from 'path';
+import path, { join } from 'path';
 import { ValidateProductSchema } from './validation';
 
 console.clear();
@@ -183,6 +183,9 @@ async function convertToCsv() {
 			if (item.name in allProducts) {
 				continue;
 			}
+
+			item.cover_image = item.cover_image;
+
 			allProducts[item.name] = item;
 		}
 	}
@@ -247,6 +250,7 @@ async function getItemsUrls(content: string, subcategory: string) {
 
 		const otherImages = product.masterVariant.images.filter((i) => i.url !== image?.url);
 
+		//they put the category after the .jpg, this is so we still have the full image
 		p.all_images = otherImages.map((im) => im.url).join('|');
 
 		p.price = product.masterVariant.price.centAmount.toString();
