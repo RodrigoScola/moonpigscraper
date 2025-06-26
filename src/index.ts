@@ -63,6 +63,10 @@ const state = {
 
 		fs.writeFileSync(p, JSON.stringify(products));
 	},
+
+	makeProductUrl(): string {
+		return state.initialUrl.host;
+	},
 };
 
 function setup() {
@@ -234,6 +238,13 @@ async function getItemsUrls(content: string, subcategory: string) {
 	for (const product of products) {
 		const p = newProduct();
 
+		const productUrl = new URL(
+			`/us/personalized-cards/p/${product.slug}/${product.id}/`,
+			state.makeProductUrl()
+		);
+
+		p.url = productUrl.toString();
+
 		p.name = product.title;
 
 		const category = categories.find((cat) => cat.ref === product.category.__ref);
@@ -264,13 +275,18 @@ async function getItemsUrls(content: string, subcategory: string) {
 
 (async () => {
 	setup();
-	await run()
-		.then(() => process.kill(0))
-		.catch(() => process.kill(1));
+
+	console.log(state.initialUrl);
+
+	// await run()
+	// 	.then(() => process.kill(0))
+	// 	.catch(() => process.kill(1));
 })();
 
 async function getCardItems(str: string): Promise<NavigationItem[] | undefined> {
 	const parsed = JSON.parse(str);
+
+	fs.writeFileSync('test.json', str);
 
 	let navItems = [];
 

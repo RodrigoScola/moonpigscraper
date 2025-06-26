@@ -2,3 +2,4 @@ node_modules/
 batches/
 out/
 dist/
+test.json
